@@ -1,0 +1,6 @@
+{
+  "name": "KasirKu",
+  "description": "Aplikasi kasir (Point of Sale) modern dengan katalog produk, keranjang cepat, pembayaran tunai/QRIS, struk digital, dan laporan penjualan real-time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

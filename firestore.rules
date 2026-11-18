@@ -1,0 +1,150 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Global helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 3. Entity Validation Blueprints
+    function isValidStoreProfile(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.storeName is string && data.storeName.size() >= 1 && data.storeName.size() <= 60 &&
+             data.address is string && data.address.size() <= 150 &&
+             data.phone is string && data.phone.size() <= 30 &&
+             data.receiptFooter is string && data.receiptFooter.size() <= 120 &&
+             (data.taxPercent is int || data.taxPercent is float) &&
+             data.taxPercent >= 0 && data.taxPercent <= 30 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidProduct(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.name is string && data.name.size() >= 1 && data.name.size() <= 80 &&
+             data.category is string && data.category.size() >= 1 && data.category.size() <= 40 &&
+             data.price is int && data.price >= 0 && data.price <= 1000000000 &&
+             (!('wholesalePrice' in data) || (data.wholesalePrice is int && data.wholesalePrice >= 0 && data.wholesalePrice <= 1000000000)) &&
+             (!('wholesaleMinQty' in data) || (data.wholesaleMinQty is int && data.wholesaleMinQty >= 0 && data.wholesaleMinQty <= 100000)) &&
+             (!('wholesaleUnit' in data) || (data.wholesaleUnit is string && data.wholesaleUnit.size() <= 20)) &&
+             data.stock is int && data.stock >= 0 && data.stock <= 1000000 &&
+             data.trackStock is bool &&
+             data.unit is string && data.unit.size() >= 1 && data.unit.size() <= 20 &&
+             data.sku is string && data.sku.size() <= 40 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidTransaction(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.receiptNumber is string && data.receiptNumber.size() >= 1 && data.receiptNumber.size() <= 40 &&
+             data.customerName is string && data.customerName.size() <= 60 &&
+             (!('saleMode' in data) || data.saleMode in ['RETAIL', 'WHOLESALE']) &&
+             data.items is list && data.items.size() >= 1 && data.items.size() <= 100 &&
+             data.items[0] is map &&
+             data.itemCount is int && data.itemCount >= 1 && data.itemCount <= 10000 &&
+             data.subtotal is int && data.subtotal >= 0 && data.subtotal <= 1000000000 &&
+             data.discountAmount is int && data.discountAmount >= 0 && data.discountAmount <= 1000000000 &&
+             data.taxAmount is int && data.taxAmount >= 0 && data.taxAmount <= 1000000000 &&
+             data.totalAmount is int && data.totalAmount >= 0 && data.totalAmount <= 1000000000 &&
+             data.paymentMethod in ['CASH', 'QRIS', 'TRANSFER'] &&
+             data.cashReceived is int && data.cashReceived >= 0 && data.cashReceived <= 1000000000 &&
+             data.changeAmount is int && data.changeAmount >= 0 && data.changeAmount <= 1000000000 &&
+             data.status in ['COMPLETED', 'VOID'] &&
+             data.note is string && data.note.size() <= 150 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    // 4. User-scoped collections
+    match /users/{userId} {
+      allow read, write: if false;
+
+      match /store/profile {
+        allow get: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         incoming().keys().hasAll(['userId', 'storeName', 'address', 'phone', 'receiptFooter', 'taxPercent', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'storeName', 'address', 'phone', 'receiptFooter', 'taxPercent', 'createdAt', 'updatedAt']) &&
+                         isValidStoreProfile(incoming());
+
+        allow update: if isOwner(userId) &&
+                         isValidStoreProfile(incoming()) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['storeName', 'address', 'phone', 'receiptFooter', 'taxPercent', 'updatedAt']);
+
+        allow delete: if isOwner(userId);
+      }
+
+      match /products/{productId} {
+        allow list: if isOwner(userId);
+        allow get: if isOwner(userId) && isValidId(productId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(productId) &&
+                         incoming().keys().hasAll(['userId', 'name', 'category', 'price', 'stock', 'trackStock', 'unit', 'sku', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'name', 'category', 'price', 'wholesalePrice', 'wholesaleMinQty', 'wholesaleUnit', 'stock', 'trackStock', 'unit', 'sku', 'createdAt', 'updatedAt']) &&
+                         isValidProduct(incoming());
+
+        allow update: if isOwner(userId) &&
+                         isValidId(productId) &&
+                         isValidProduct(incoming()) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt && (
+                           // Action: Edit product details (including wholesale tier)
+                           incoming().diff(existing()).affectedKeys().hasOnly(['name', 'category', 'price', 'wholesalePrice', 'wholesaleMinQty', 'wholesaleUnit', 'stock', 'trackStock', 'unit', 'sku', 'updatedAt']) ||
+                           // Action: Adjust stock during checkout or restock
+                           incoming().diff(existing()).affectedKeys().hasOnly(['stock', 'updatedAt'])
+                         );
+
+        allow delete: if isOwner(userId) && isValidId(productId);
+      }
+
+      match /transactions/{transactionId} {
+        allow list: if isOwner(userId);
+        allow get: if isOwner(userId) && isValidId(transactionId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(transactionId) &&
+                         incoming().keys().hasAll(['userId', 'receiptNumber', 'customerName', 'items', 'itemCount', 'subtotal', 'discountAmount', 'taxAmount', 'totalAmount', 'paymentMethod', 'cashReceived', 'changeAmount', 'status', 'note', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'receiptNumber', 'customerName', 'saleMode', 'items', 'itemCount', 'subtotal', 'discountAmount', 'taxAmount', 'totalAmount', 'paymentMethod', 'cashReceived', 'changeAmount', 'status', 'note', 'createdAt', 'updatedAt']) &&
+                         incoming().status == 'COMPLETED' &&
+                         isValidTransaction(incoming());
+
+        allow update: if isOwner(userId) &&
+                         isValidId(transactionId) &&
+                         isValidTransaction(incoming()) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         existing().status != 'VOID' &&
+                         existing().status == 'COMPLETED' &&
+                         incoming().status == 'VOID' &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']);
+
+        allow delete: if false;
+      }
+    }
+  }
+}

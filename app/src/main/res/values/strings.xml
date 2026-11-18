@@ -1,0 +1,122 @@
+<resources>
+    <string name="app_name">KasirKu</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_welcome_title">KasirKu POS</string>
+    <string name="auth_welcome_subtitle">Kelola penjualan eceran &amp; grosir, stok produk, pembayaran QRIS &amp; tunai, serta struk digital dalam satu aplikasi.</string>
+    <string name="auth_sign_in_google">Masuk dengan Google</string>
+    <string name="auth_enter_without_google">Masuk Tanpa Akun Google (Mode Lokal)</string>
+    <string name="auth_local_mode_hint">Data tersimpan aman di perangkat tanpa perlu login Google.</string>
+    <string name="auth_signing_in">Menghubungkan akun…</string>
+    <string name="auth_feature_fast">Transaksi Eceran &amp; Grosir Cepat</string>
+    <string name="auth_feature_stock">Pantau Stok &amp; Harga Bertingkat Real-Time</string>
+    <string name="auth_feature_receipt">Struk Digital &amp; Rekap Omzet Harian</string>
+    <string name="auth_banner_desc">Ilustrasi meja kasir modern KasirKu</string>
+
+    <!-- Navigation Tabs -->
+    <string name="nav_kasir">Kasir</string>
+    <string name="nav_grosir">Grosir</string>
+    <string name="nav_produk">Produk</string>
+    <string name="nav_riwayat">Riwayat</string>
+    <string name="nav_toko">Toko</string>
+
+    <!-- POS Register -->
+    <string name="pos_search_hint">Cari nama produk atau SKU…</string>
+    <string name="pos_custom_item">Item Manual</string>
+    <string name="pos_all_categories">Semua</string>
+    <string name="pos_empty_catalog_title">Katalog Produk Masih Kosong</string>
+    <string name="pos_empty_catalog_desc">Tambahkan produk pertamamu atau muat contoh menu warung/kafe untuk langsung mencoba kasir eceran &amp; grosir.</string>
+    <string name="pos_seed_starter">Muat 8 Produk Contoh</string>
+    <string name="pos_go_add_product">Tambah Produk</string>
+    <string name="pos_out_of_stock">Stok Habis</string>
+    <string name="pos_cart_title">Keranjang Belanja</string>
+    <string name="pos_cart_empty">Belum ada item di keranjang. Ketuk produk untuk menambahkan.</string>
+    <string name="pos_checkout_cta">Bayar</string>
+    <string name="pos_clear_cart">Kosongkan</string>
+
+    <!-- Wholesale / Grosir -->
+    <string name="wholesale_title">Menu Grosir</string>
+    <string name="wholesale_subtitle">Harga spesial pembelian partai &amp; reseller</string>
+    <string name="wholesale_only_configured">Khusus Harga Grosir</string>
+    <string name="wholesale_show_all">Semua Produk</string>
+    <string name="wholesale_empty_title">Belum Ada Produk Harga Grosir</string>
+    <string name="wholesale_empty_desc">Atur harga grosir dan minimal beli di menu Produk, atau tampilkan semua produk untuk transaksi partai.</string>
+    <string name="wholesale_min_order">Min. %1$d %2$s</string>
+    <string name="wholesale_retail_ref">Eceran: %1$s</string>
+    <string name="wholesale_active_badge">GROSIR</string>
+    <string name="wholesale_savings_label">Hemat Grosir</string>
+
+    <!-- Checkout -->
+    <string name="checkout_title">Pembayaran</string>
+    <string name="checkout_customer_label">Nama Pelanggan (Opsional)</string>
+    <string name="checkout_note_label">Catatan Pesanan (Opsional)</string>
+    <string name="checkout_discount_label">Diskon (Rp)</string>
+    <string name="checkout_subtotal">Subtotal</string>
+    <string name="checkout_discount">Diskon</string>
+    <string name="checkout_tax">Pajak / PPN</string>
+    <string name="checkout_total">Total Tagihan</string>
+    <string name="checkout_method_label">Metode Pembayaran</string>
+    <string name="checkout_cash_received">Uang Diterima</string>
+    <string name="checkout_exact_cash">Uang Pas</string>
+    <string name="checkout_change">Kembalian</string>
+    <string name="checkout_insufficient_cash">Uang diterima kurang dari total tagihan</string>
+    <string name="checkout_confirm_pay">Selesaikan Pembayaran</string>
+    <string name="checkout_qris_hint">Tunjukkan kode QRIS toko kepada pelanggan untuk dipindai.</string>
+    <string name="checkout_transfer_hint">Pastikan bukti transfer telah diterima sebelum konfirmasi.</string>
+
+    <!-- Receipt -->
+    <string name="receipt_title">Struk Digital</string>
+    <string name="receipt_share">Bagikan Struk</string>
+    <string name="receipt_close">Selesai</string>
+    <string name="receipt_void_badge">DIBATALKAN</string>
+    <string name="receipt_void_action">Batalkan Transaksi</string>
+
+    <!-- Products -->
+    <string name="products_title">Katalog Produk</string>
+    <string name="products_add">Tambah Produk</string>
+    <string name="products_edit">Edit Produk</string>
+    <string name="products_total_sku">Total SKU</string>
+    <string name="products_low_stock">Stok Menipis</string>
+    <string name="products_name_label">Nama Produk</string>
+    <string name="products_category_label">Kategori</string>
+    <string name="products_price_label">Harga Eceran (Rp)</string>
+    <string name="products_wholesale_section">Pengaturan Harga Grosir (Opsional)</string>
+    <string name="products_wholesale_price_label">Harga Grosir (Rp)</string>
+    <string name="products_wholesale_min_qty_label">Min. Beli Grosir</string>
+    <string name="products_wholesale_unit_label">Satuan Grosir (dus/pak)</string>
+    <string name="products_stock_label">Jumlah Stok</string>
+    <string name="products_unit_label">Satuan (pcs, cup, porsi)</string>
+    <string name="products_sku_label">Kode SKU / Barcode (Opsional)</string>
+    <string name="products_track_stock_label">Lacak &amp; kurangi stok otomatis</string>
+    <string name="products_save">Simpan Produk</string>
+    <string name="products_delete_confirm_title">Hapus Produk?</string>
+    <string name="products_delete_confirm_desc">Produk yang dihapus tidak lagi muncul di kasir. Transaksi lama tetap tersimpan.</string>
+
+    <!-- History -->
+    <string name="history_title">Riwayat &amp; Laporan</string>
+    <string name="history_today_revenue">Omzet Hari Ini</string>
+    <string name="history_today_tx">Transaksi Hari Ini</string>
+    <string name="history_avg_order">Rata-rata</string>
+    <string name="history_empty_title">Belum Ada Transaksi</string>
+    <string name="history_empty_desc">Transaksi yang selesai di layar Kasir atau Grosir akan langsung muncul di sini.</string>
+
+    <!-- Store Settings -->
+    <string name="store_title">Pengaturan Toko</string>
+    <string name="store_name_label">Nama Toko / Usaha</string>
+    <string name="store_address_label">Alamat Toko</string>
+    <string name="store_phone_label">No. Telepon / WhatsApp</string>
+    <string name="store_tax_label">Persentase Pajak / PPN (%)</string>
+    <string name="store_footer_label">Pesan Footer Struk</string>
+    <string name="store_save">Simpan Pengaturan</string>
+    <string name="store_sign_out">Keluar dari Akun</string>
+    <string name="store_switch_to_google">Masuk / Hubungkan Akun Google</string>
+    <string name="store_local_mode_title">Mode Lokal (Tanpa Akun Google)</string>
+    <string name="store_local_mode_desc">Data disimpan di perangkat ini. Masuk dengan Google untuk sinkronisasi cloud.</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Batal</string>
+    <string name="common_delete">Hapus</string>
+    <string name="common_confirm">Konfirmasi</string>
+    <string name="common_retry">Coba Lagi</string>
+    <string name="common_add">Tambah</string>
+</resources>

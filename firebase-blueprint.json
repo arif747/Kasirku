@@ -1,0 +1,240 @@
+{
+  "entities": {
+    "StoreProfile": {
+      "title": "StoreProfile",
+      "description": "Merchant store configuration and receipt footer settings owned by an authenticated user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated Firebase UID of the store owner."
+        },
+        "storeName": {
+          "type": "string",
+          "description": "Display name of the store printed on receipts."
+        },
+        "address": {
+          "type": "string",
+          "description": "Store address printed on receipts."
+        },
+        "phone": {
+          "type": "string",
+          "description": "Store phone number printed on receipts."
+        },
+        "receiptFooter": {
+          "type": "string",
+          "description": "Footer message printed on receipts."
+        },
+        "taxPercent": {
+          "type": "number",
+          "description": "Default tax percentage (0 to 30)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "storeName",
+        "address",
+        "phone",
+        "receiptFooter",
+        "taxPercent",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Sellable item in the merchant's POS catalog with optional wholesale pricing tier.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated Firebase UID of the store owner."
+        },
+        "name": {
+          "type": "string",
+          "description": "Product name."
+        },
+        "category": {
+          "type": "string",
+          "description": "Product category label."
+        },
+        "price": {
+          "type": "integer",
+          "description": "Retail unit price in IDR (Rupiah)."
+        },
+        "wholesalePrice": {
+          "type": "integer",
+          "description": "Optional wholesale unit price in IDR (0 if disabled)."
+        },
+        "wholesaleMinQty": {
+          "type": "integer",
+          "description": "Optional minimum quantity required for wholesale price."
+        },
+        "wholesaleUnit": {
+          "type": "string",
+          "description": "Optional wholesale unit label such as dus, karton, pak."
+        },
+        "stock": {
+          "type": "integer",
+          "description": "Current available stock quantity."
+        },
+        "trackStock": {
+          "type": "boolean",
+          "description": "Whether checkout decrements stock for this item."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit label such as pcs, cup, porsi."
+        },
+        "sku": {
+          "type": "string",
+          "description": "Optional SKU or barcode code."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "name",
+        "category",
+        "price",
+        "stock",
+        "trackStock",
+        "unit",
+        "sku",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Completed or voided POS sale transaction with itemized line items.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated Firebase UID of the store owner."
+        },
+        "receiptNumber": {
+          "type": "string",
+          "description": "Unique human-readable receipt number."
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Optional customer name."
+        },
+        "saleMode": {
+          "type": "string",
+          "enum": ["RETAIL", "WHOLESALE"],
+          "description": "Whether transaction was created in retail or wholesale mode."
+        },
+        "items": {
+          "type": "array",
+          "description": "Bounded list of sold line items."
+        },
+        "itemCount": {
+          "type": "integer",
+          "description": "Total unit quantity across all line items."
+        },
+        "subtotal": {
+          "type": "integer",
+          "description": "Subtotal in IDR before discount and tax."
+        },
+        "discountAmount": {
+          "type": "integer",
+          "description": "Discount amount in IDR."
+        },
+        "taxAmount": {
+          "type": "integer",
+          "description": "Tax amount in IDR."
+        },
+        "totalAmount": {
+          "type": "integer",
+          "description": "Final total payable in IDR."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "enum": ["CASH", "QRIS", "TRANSFER"],
+          "description": "Payment method used."
+        },
+        "cashReceived": {
+          "type": "integer",
+          "description": "Amount tendered by customer in IDR."
+        },
+        "changeAmount": {
+          "type": "integer",
+          "description": "Change returned in IDR."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["COMPLETED", "VOID"],
+          "description": "Transaction lifecycle status."
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional order note."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "receiptNumber",
+        "customerName",
+        "items",
+        "itemCount",
+        "subtotal",
+        "discountAmount",
+        "taxAmount",
+        "totalAmount",
+        "paymentMethod",
+        "cashReceived",
+        "changeAmount",
+        "status",
+        "note",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/store/profile": {
+      "schema": { "$ref": "#/entities/StoreProfile" },
+      "description": "Singleton store settings document for the authenticated merchant."
+    },
+    "/users/{userId}/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Products in the merchant's catalog."
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "POS sale transactions and digital receipts."
+    }
+  }
+}
